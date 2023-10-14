@@ -21,5 +21,6 @@ public class CarDto {
 
     private String quantity;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private byte[] image;
 }
