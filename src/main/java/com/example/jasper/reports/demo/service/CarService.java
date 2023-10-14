@@ -8,6 +8,8 @@ import com.example.jasper.reports.demo.mapper.CarMapper;
 import com.example.jasper.reports.demo.repository.CarRepository;
 import com.example.jasper.reports.demo.utils.ImageUtil;
 import jakarta.validation.ValidationException;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,11 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 @Service
 public class CarService {
@@ -129,5 +132,33 @@ public class CarService {
         catch (Exception e){
             throw new BadRequestException("Something went wrong when uploading the image " + e.getMessage());
         }
+    }
+
+
+    public void createCarFile() throws JRException, FileNotFoundException {
+
+        List<Car> carList = this.carRepository.findAll();
+
+        //Load file and compile it
+        File file = ResourceUtils.getFile("classpath:cars.jrxml");
+
+        //generate the jasper file
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+
+        //catch the data needed from the list
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(carList);
+
+        //create parameters (not needed)
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("createdBy", "Tiago92869");
+
+        //Generate file
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        // Get the current working directory
+        String currentDirectory = System.getProperty("user.dir");
+
+        //Export file
+        JasperExportManager.exportReportToHtmlFile(jasperPrint, currentDirectory + "/cars.html");
     }
 }

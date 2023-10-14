@@ -90,6 +90,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Jasper -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.20.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -4,6 +4,7 @@ import com.example.jasper.reports.demo.dto.CarDto;
 import com.example.jasper.reports.demo.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.util.UUID;
 
 @Tag(name = "Car", description = "Car management")
@@ -45,7 +47,7 @@ public class CarController {
 
     @PostMapping("/")
     @Operation(summary = "Create car")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public CarDto createCar(@RequestBody CarDto carDto){
 
         return this.carService.createCar(carDto);
@@ -81,5 +83,13 @@ public class CarController {
     public void uploadImage(@PathVariable UUID id, @RequestParam("file") MultipartFile file){
 
         this.carService.uploadCarImage(id, file);
+    }
+
+    @PostMapping("/file")
+    @Operation(summary = "Generate file with all the cars info")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createCarFile() throws JRException, FileNotFoundException {
+
+        this.carService.createCarFile();
     }
 }
