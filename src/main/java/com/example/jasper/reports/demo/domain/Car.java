@@ -1,9 +1,6 @@
 package com.example.jasper.reports.demo.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +28,7 @@ public class Car {
 
     private String quantity;
 
+    @Lob
+    @Column(columnDefinition = "VARBINARY(MAX)")
     private byte[] image;
 }

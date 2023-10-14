@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -62,5 +65,21 @@ public class CarController {
     public void deleteCarById(@PathVariable UUID id){
 
         this.carService.deleteCarById(id);
+    }
+
+    @GetMapping(value = "/image/{id}")
+    @Operation(summary = "Get Product image by id")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getProductImageById(@PathVariable UUID id){
+
+        return this.carService.getCarImageById(id);
+    }
+
+    @PatchMapping(value = "/image/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload image to Product by id")
+    @ResponseStatus(HttpStatus.OK)
+    public void uploadImage(@PathVariable UUID id, @RequestParam("file") MultipartFile file){
+
+        this.carService.uploadCarImage(id, file);
     }
 }
