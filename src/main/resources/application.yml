@@ -1,0 +1,26 @@
+server:
+  port: 1212
+  servlet:
+    contextPath: /api/jackson-service
+
+spring:
+  #main:
+  #  web-application-type: none
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true;databaseName=jackson_db
+    username: sa
+    password: Password123!
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    properties:
+      dialect: org.hibernate.dialect.SQLServerDialect
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enable: true
