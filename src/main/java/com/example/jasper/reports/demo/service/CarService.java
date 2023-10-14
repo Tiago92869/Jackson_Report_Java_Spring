@@ -6,8 +6,6 @@ import com.example.jasper.reports.demo.exception.BadRequestException;
 import com.example.jasper.reports.demo.exception.EntityNotFoundException;
 import com.example.jasper.reports.demo.mapper.CarMapper;
 import com.example.jasper.reports.demo.repository.CarRepository;
-import com.example.jasper.reports.demo.utils.ImageUtil;
-import jakarta.validation.ValidationException;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +101,7 @@ public class CarService {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.IMAGE_PNG)
-                .body(ImageUtil.decompressImage(maybeOptional.get().getImage()));
+                .body(maybeOptional.get().getImage());
     }
 
     public void uploadCarImage(UUID id, MultipartFile file) {
@@ -114,24 +112,16 @@ public class CarService {
             throw new EntityNotFoundException("Car could not be found");
         }
 
+        Car car = maybeOptional.get();
+
         try{
-            Car car = maybeOptional.get();
-            //check for content type of image
-            if(file != null) {
+            car.setImage(file.getBytes());
+        }catch (Exception e){
 
-                if(!Objects.equals(file.getContentType(), "image/png")
-                        && !Objects.equals(file.getContentType(), "image/jpeg")){
-
-                    throw new ValidationException("The image must be of type .png, .jpeg or .jpg");
-                }
-            }
-
-            car.setImage(ImageUtil.compressImage(file.getBytes()));
-            this.carRepository.save(car);
+            throw new BadRequestException("Something went wrong when processing the image");
         }
-        catch (Exception e){
-            throw new BadRequestException("Something went wrong when uploading the image " + e.getMessage());
-        }
+
+        this.carRepository.save(car);
     }
 
 
