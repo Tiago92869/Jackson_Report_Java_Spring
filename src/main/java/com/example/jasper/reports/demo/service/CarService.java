@@ -129,6 +129,11 @@ public class CarService {
 
         List<Car> carList = this.carRepository.findAll();
 
+        for (Car car: carList) {
+
+            car.setImage(null);
+        }
+
         //Load file and compile it
         File file = ResourceUtils.getFile("classpath:cars.jrxml");
 
