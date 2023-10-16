@@ -129,13 +129,8 @@ public class CarService {
 
         List<Car> carList = this.carRepository.findAll();
 
-        for (Car car: carList) {
-
-            car.setImage(null);
-        }
-
         //Load file and compile it
-        File file = ResourceUtils.getFile("classpath:cars.jrxml");
+        File file = ResourceUtils.getFile("classpath:newCar.jrxml");
 
         //generate the jasper file
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
@@ -154,6 +149,6 @@ public class CarService {
         String currentDirectory = System.getProperty("user.dir");
 
         //Export file
-        JasperExportManager.exportReportToHtmlFile(jasperPrint, currentDirectory + "/cars.html");
+        JasperExportManager.exportReportToHtmlFile(jasperPrint, currentDirectory + "/carsNew.html");
     }
 }
